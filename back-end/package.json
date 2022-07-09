@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "server": "nodemon server --ignore front-end",
+    "front-end": "npm start --prefix ../front-end",
+    "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run front-end\""
   },
   "author": "",
   "license": "ISC",

@@ -29,10 +29,10 @@ const UserSchema = new mongoose.Schema({
 });
 
 //password hashing
-//.pre mean before save the document we want run a function
+//before save the document this function will be executed
 UserSchema.pre("save", async function () {
   if (!this.isModified("password")) return;
-  const salt = await bcrypt.genSalt(10); //password hash wenawa characters 10 kata
+  const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });
 

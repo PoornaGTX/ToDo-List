@@ -2,6 +2,8 @@ const User = require("../models/User");
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, UnAuthenticatedError } = require("../errors/index");
 
+//user registration controller
+
 const register = async (req, res) => {
   const { name, email, password } = req.body;
 
@@ -28,6 +30,8 @@ const register = async (req, res) => {
   });
 };
 
+//user Login controller
+
 const login = async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
@@ -51,6 +55,8 @@ const login = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ user, token, location: user.location });
 };
+
+//user details update controller
 
 const updateUser = async (req, res) => {
   const { email, name, lastName, location } = req.body;
