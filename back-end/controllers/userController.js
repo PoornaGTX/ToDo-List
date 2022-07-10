@@ -53,15 +53,15 @@ const login = async (req, res) => {
   const token = user.createJWT();
   user.password = undefined;
 
-  res.status(StatusCodes.OK).json({ user, token, location: user.location });
+  res.status(StatusCodes.OK).json({ user, token });
 };
 
 //user details update controller
 
 const updateUser = async (req, res) => {
-  const { email, name, lastName, location } = req.body;
+  const { email, name } = req.body;
 
-  if (!email || !name || !lastName || !location) {
+  if (!email || !name) {
     throw new BadRequestError("Please provide all values");
   }
 
@@ -69,13 +69,11 @@ const updateUser = async (req, res) => {
 
   user.email = email;
   user.name = name;
-  user.lastName = lastName;
-  user.location = location;
 
   await user.save();
 
   const token = user.createJWT();
-  res.status(StatusCodes.OK).json({ user, token, location: user.location });
+  res.status(StatusCodes.OK).json({ user, token });
 };
 
 module.exports = { register, login, updateUser };
