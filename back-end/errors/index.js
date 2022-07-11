@@ -1,4 +1,4 @@
-const UnAuthenticatedError = require("./unauthenticatedError");
+const UnAuthenticatedError = require("./UnauthenticatedError");
 const NotFoundError = require("./NotFoundError");
 const BadRequestError = require("./BadRequestError");
 

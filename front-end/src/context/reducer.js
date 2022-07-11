@@ -120,7 +120,7 @@ const reducer = (state, action) => {
       isLoading: false,
       showAlert: true,
       alertType: "success",
-      alertText: "success",
+      alertText: "Link",
     };
   }
 
@@ -272,7 +272,13 @@ const reducer = (state, action) => {
   }
 
   if (action.type === DELETE_TODO) {
-    return { ...state, isLoading: true };
+    return {
+      ...state,
+      isLoading: true,
+      showAlert: true,
+      alertType: "success",
+      alertText: "ToDo deleted",
+    };
   }
 
   if (action.type === HANDLE_CHANGE) {

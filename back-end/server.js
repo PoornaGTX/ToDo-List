@@ -10,7 +10,7 @@ const port = process.env.PORT || 5000;
 require("express-async-errors");
 
 // db
-const connectDB = require("./db/connect.js");
+const connectDB = require("./db/connect");
 
 //routes
 const toDoRoutes = require("./routes/toDoRoutes");

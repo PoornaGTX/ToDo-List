@@ -7,10 +7,12 @@ import Wrapper from "../wrappers/ProfilePageWrapper";
 import NavBar from "../component/NavBar";
 
 const Profile = () => {
+  //get states from globel context
   const { user, showAlert, updateUser, isLoading, logoutUser } =
     useAppContext();
   const navigate = useNavigate();
 
+  //states
   const [name, setName] = useState(user?.name);
   const [email, setEmail] = useState(user?.email);
 

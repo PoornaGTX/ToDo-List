@@ -7,6 +7,7 @@ import Alert from "../component/Alert";
 
 const FrogetPassword = () => {
   const navigate = useNavigate();
+  //get states from globel context
   const {
     user,
     isLoading,
@@ -16,16 +17,21 @@ const FrogetPassword = () => {
     PasswordRestStatus,
   } = useAppContext();
 
+  //states
   const [email, setEmail] = useState("");
 
   const onSubmit = (e) => {
     e.preventDefault();
+
+    //validate the inputs
     if (!email) {
       displayAlert();
       return;
     }
     loginUserPasswordRest(email);
     console.log(email);
+
+    alert("Password rest link sent your email, please check your email");
   };
 
   useEffect(() => {
@@ -39,8 +45,9 @@ const FrogetPassword = () => {
   return (
     <Wrapper className="full-page">
       <form className="form" onSubmit={onSubmit}>
-        <h3>{PasswordRestStatus ? "Rest Password" : "Froget Password"}</h3>
         {showAlert && <Alert />}
+        <h3>{PasswordRestStatus ? "Rest Password" : "Froget Password"}</h3>
+
         <label>Enter Email here</label>
         <input
           className="form-input"

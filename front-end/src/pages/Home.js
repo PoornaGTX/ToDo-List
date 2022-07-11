@@ -26,6 +26,13 @@ const Home = () => {
   const [toDoName, setToDoName] = useState("");
   const [date, setDate] = useState("");
 
+  //incomplete tasks
+  const inCompleteToDos = todos.filter(
+    (singletodo) => singletodo.isComplete === false
+  );
+
+  console.log(inCompleteToDos.length);
+
   //date
   var today = new Date();
   var year = today.getFullYear();
@@ -67,32 +74,41 @@ const Home = () => {
       <Wrapper>
         <form className="form" onSubmit={handleSubmit}>
           <center>
-            <h3>Add ToDo</h3>
+            <h2>Add ToDo</h2>
+            <h5>
+              You have {todos.length} TODO{todos.length > 1 && "'s"}
+              {inCompleteToDos.length >= 1 && " and"} {inCompleteToDos.length}{" "}
+              To Complete
+            </h5>
           </center>
           {showAlert && <Alert />}
           <div className="form-center">
-            <input
-              className="form-input"
-              type="text"
-              name="toDoName"
-              value={toDoName}
-              onChange={(e) => setToDoName(e.target.value)}
-            />
-
-            <input
-              className="form-input"
-              type="date"
-              name="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-            />
-
+            <label>
+              Enter ToDo Name Here
+              <input
+                className="form-input"
+                type="text"
+                name="toDoName"
+                value={toDoName}
+                onChange={(e) => setToDoName(e.target.value)}
+              />
+            </label>
+            <label>
+              Enter ToDo Name Here
+              <input
+                className="form-input"
+                type="date"
+                name="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+              />
+            </label>
             <button
               className="btn btn-block"
               type="submit"
               disabled={isLoading}
             >
-              {isLoading ? "Please Wait.." : "Save and Changes"}
+              {isLoading ? "Please Wait.." : "Add ToDo"}
             </button>
           </div>
         </form>
@@ -112,15 +128,25 @@ const Home = () => {
                 name="toDoName"
                 value={toDoName}
                 color={color}
+                readOnly={true}
               />
-              <FormRow type="text" name="date" value={date} color={color} />
+
+              <FormRow
+                type="text"
+                name="date"
+                value={date}
+                color={color}
+                readOnly={true}
+              />
+
               <button
-                className="btn btn-block"
+                className={color ? "btn btn-block btn-danger" : "btn btn-block"}
                 type="button"
                 onClick={() => editHandle(_id)}
-                disabled={isComplete}
               >
-                {isComplete ? "ToDo is Completed" : "Edit"}
+                {(isComplete && "ToDo is Completed") ||
+                  (color === "red" && "ToDo is overdue and Incomplete") ||
+                  "Edit ToDo"}
               </button>
               <br />
             </div>
