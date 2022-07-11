@@ -50,6 +50,10 @@ const Register = () => {
     console.log(values);
   };
 
+  const passwordRest = () => {
+    navigate("/login/frogetpassword");
+  };
+
   useEffect(() => {
     if (user) {
       setTimeout(() => {
@@ -62,6 +66,7 @@ const Register = () => {
     <Wrapper className="full-page">
       <form className="form" onSubmit={onSubmit}>
         <h3>{values.isMember ? "Loging" : "Register"}</h3>
+
         {showAlert && <Alert />}
         {!values.isMember && (
           <FormRow
@@ -93,6 +98,9 @@ const Register = () => {
           {values.isMember ? "Not a member yet?" : "Already a member?"}
           <button type="button" onClick={toggleMember} className="member-btn">
             {values.isMember ? "Register" : "Login"}
+          </button>
+          <button type="button" className="member-btn" onClick={passwordRest}>
+            Froget password
           </button>
         </p>
       </form>

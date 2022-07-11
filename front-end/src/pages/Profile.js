@@ -7,7 +7,8 @@ import Wrapper from "../wrappers/ProfilePageWrapper";
 import NavBar from "../component/NavBar";
 
 const Profile = () => {
-  const { user, showAlert, updateUser, isLoading } = useAppContext();
+  const { user, showAlert, updateUser, isLoading, logoutUser } =
+    useAppContext();
   const navigate = useNavigate();
 
   const [name, setName] = useState(user?.name);
@@ -17,6 +18,11 @@ const Profile = () => {
     e.preventDefault();
 
     updateUser({ name, email });
+  };
+
+  const changePassword = () => {
+    navigate("/login/frogetpassword");
+    logoutUser();
   };
 
   //restricted from unauthorized users
@@ -47,13 +53,22 @@ const Profile = () => {
               value={email}
               handleChange={(e) => setEmail(e.target.value)}
             />
+            <br />
+            <button
+              className="btn btn-block"
+              type="submit"
+              disabled={isLoading}
+              onClick={changePassword}
+            >
+              {isLoading ? "Please Wait.." : "Change Password"}
+            </button>
 
             <button
               className="btn btn-block"
               type="submit"
               disabled={isLoading}
             >
-              {isLoading ? "Please Wait.." : "Save and Changes"}
+              {isLoading ? "Please Wait.." : "Update Details"}
             </button>
           </div>
         </form>

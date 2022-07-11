@@ -21,6 +21,14 @@ import {
   EDIT_TODO,
   EDIT_TODO_COMPLETE,
   EDIT_TODO_ERROR,
+  HANDLE_CHANGE,
+  DELETE_TODO,
+  LOGIN_PASSWORDREST,
+  LOGIN_PASSWORDREST_COMPLETE,
+  LOGIN_PASSWORDREST_ERROR,
+  LOGIN_NEWPASSWORD,
+  LOGIN_NEWPASSWORD_COMPLETE,
+  LOGIN_NEWPASSWORD_ERROR,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -82,6 +90,7 @@ const reducer = (state, action) => {
     return {
       ...state,
       isLoading: false,
+      PasswordRestStatus: false,
       token: action.payload.token,
       user: action.payload.user,
       showAlert: true,
@@ -100,11 +109,63 @@ const reducer = (state, action) => {
     };
   }
 
+  //password reset
+  if (action.type === LOGIN_PASSWORDREST) {
+    return { ...state, isLoading: true };
+  }
+
+  if (action.type === LOGIN_PASSWORDREST_COMPLETE) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: "success",
+      alertText: "success",
+    };
+  }
+
+  if (action.type === LOGIN_PASSWORDREST_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: "danger",
+      alertText: "Error",
+    };
+  }
+
+  //new password after reset
+
+  if (action.type === LOGIN_NEWPASSWORD) {
+    return { ...state, isLoading: true };
+  }
+
+  if (action.type === LOGIN_NEWPASSWORD_COMPLETE) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: "success",
+      alertText: action.payload.msg,
+    };
+  }
+
+  if (action.type === LOGIN_NEWPASSWORD_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: "danger",
+      alertText: "Error",
+    };
+  }
+
   //logout user
 
   if (action.type === LOGOUT_USER) {
     return {
       ...initialState,
+      PasswordRestStatus: true,
       user: null,
       token: null,
     };
@@ -172,13 +233,14 @@ const reducer = (state, action) => {
     const todo = state.todos.find(
       (singletodo) => singletodo._id === action.payload.id
     );
-    const { _id, toDoName, date } = todo;
+    const { _id, toDoName, date, isComplete } = todo;
     return {
       ...state,
       isEditing: true,
       editToDOId: _id,
       toDoName,
       date,
+      isComplete,
     };
   }
 
@@ -207,6 +269,14 @@ const reducer = (state, action) => {
       alertType: "danger",
       alertText: "something went wrong",
     };
+  }
+
+  if (action.type === DELETE_TODO) {
+    return { ...state, isLoading: true };
+  }
+
+  if (action.type === HANDLE_CHANGE) {
+    return { ...state, [action.payload.name]: action.payload.value };
   }
 };
 

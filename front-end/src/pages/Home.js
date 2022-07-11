@@ -5,6 +5,7 @@ import NavBar from "../component/NavBar";
 import FormRow from "../component/FormRow";
 import Alert from "../component/Alert";
 import Wrapper from "../wrappers/ProfilePageWrapper";
+import Search from "../component/Search";
 
 const Home = () => {
   const {
@@ -16,14 +17,28 @@ const Home = () => {
     todos,
     setEditToDo,
     displayAlert,
+    search,
+    sort,
+    searchDate,
   } = useAppContext();
   const navigate = useNavigate();
 
   const [toDoName, setToDoName] = useState("");
   const [date, setDate] = useState("");
 
+  //date
+  var today = new Date();
+  var year = today.getFullYear();
+  var month = today.getMonth() + 1;
+  var datenew = today.getDate();
+
+  if (month >= 10) {
+    var newToday = year + "-" + +month + "-" + datenew;
+  } else {
+    var newToday = year + "-" + "0" + month + "-" + datenew;
+  }
+
   const handleSubmit = (e) => {
-    e.preventDefault();
     if (!toDoName || !date) {
       displayAlert();
       return;
@@ -43,14 +58,17 @@ const Home = () => {
     if (!user) {
       navigate("/register");
     }
-  }, []);
+  }, [search, sort, searchDate]);
 
   return (
     <>
       <NavBar />
+      <Search />
       <Wrapper>
         <form className="form" onSubmit={handleSubmit}>
-          <h3>Add ToDo</h3>
+          <center>
+            <h3>Add ToDo</h3>
+          </center>
           {showAlert && <Alert />}
           <div className="form-center">
             <input
@@ -82,17 +100,27 @@ const Home = () => {
         <br />
         <br />
         {todos.map((todo) => {
-          const { _id, toDoName, date } = todo;
+          const { _id, toDoName, date, isComplete } = todo;
+          if (date === newToday) {
+            var color = "red";
+          }
+
           return (
             <div className="form-center" key={_id}>
-              <FormRow type="text" name="toDoName" value={toDoName} />
-              <FormRow type="text" name="date" value={date} />
+              <FormRow
+                type="text"
+                name="toDoName"
+                value={toDoName}
+                color={color}
+              />
+              <FormRow type="text" name="date" value={date} color={color} />
               <button
                 className="btn btn-block"
                 type="button"
                 onClick={() => editHandle(_id)}
+                disabled={isComplete}
               >
-                Edit
+                {isComplete ? "ToDo is Completed" : "Edit"}
               </button>
               <br />
             </div>

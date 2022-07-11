@@ -6,9 +6,10 @@ const {
   getALLToDos,
   createToDo,
   updateToDo,
+  deleteToDo,
 } = require("../controllers/toDoController");
 
 router.route("/").get(getALLToDos).post(createToDo);
-router.route("/:id").patch(updateToDo).delete();
+router.route("/:id").patch(updateToDo).delete(deleteToDo);
 
 module.exports = router;
