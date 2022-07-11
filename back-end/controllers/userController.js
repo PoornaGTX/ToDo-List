@@ -3,7 +3,6 @@ const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, UnAuthenticatedError } = require("../errors/index");
 const jwt = require("jsonwebtoken");
 var nodemailer = require("nodemailer");
-const bcrypt = require("bcryptjs");
 
 //user registration controller
 
@@ -22,6 +21,7 @@ const register = async (req, res) => {
 
   const user = await User.create({ name, email, password });
 
+  //create token
   const token = user.createJWT();
 
   res.status(StatusCodes.CREATED).json({
@@ -52,7 +52,10 @@ const login = async (req, res) => {
     throw new UnAuthenticatedError("invalid  password");
   }
 
+  //create token
   const token = user.createJWT();
+
+  //undefined the password to front-end
   user.password = undefined;
 
   res.status(StatusCodes.OK).json({ user, token });
@@ -78,6 +81,7 @@ const updateUser = async (req, res) => {
   res.status(StatusCodes.OK).json({ user, token });
 };
 
+//email verification for forget password
 const frogetPassword = async (req, res) => {
   const { email } = req.body;
   console.log(email);
@@ -94,8 +98,13 @@ const frogetPassword = async (req, res) => {
     id: user.id,
   };
 
+  //token
   const token = jwt.sign(payload, secret, { expiresIn: "15m" });
+  //email link
+  console.log(token);
   const link = `http://localhost:3000/reset-password/${user.id}/${token}`;
+
+  //email
 
   var transporter = nodemailer.createTransport({
     service: "gmail",
@@ -121,14 +130,29 @@ const frogetPassword = async (req, res) => {
   });
 };
 
+//create new password
+
 const newPassword = async (req, res) => {
   const { id, token } = req.params;
   const { newPassword } = req.body;
 
   const user = await User.findOne({ _id: id });
 
+  //check the user is exsisit
   if (!user) {
     throw new UnAuthenticatedError("invalid Credentials");
+  }
+
+  try {
+    //verify token
+    const secret = process.env.JWT_SECRET + user.password;
+    const payload = jwt.verify(token, secret);
+
+    if (user.email !== payload.email) {
+      throw new UnAuthenticatedError("invalid token");
+    }
+  } catch (error) {
+    throw new UnAuthenticatedError("Authentication Invalid");
   }
 
   user.password = newPassword;

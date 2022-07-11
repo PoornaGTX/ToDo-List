@@ -28,19 +28,21 @@ const NavBar = () => {
             <a className="nav-link" href="http://localhost:3000/update-profile">
               Profile
             </a>
-            <a className="nav-link" href="http://localhost:3000/update-profile">
+            {/* <a className="nav-link" href="http://localhost:3000/update-profile">
               {user?.name}{" "}
-            </a>
-
-            <button
-              className="nav-link btn btn-primary float-right"
-              onClick={LogoutHandle}
-            >
-              logout
-            </button>
+            </a> */}
           </div>
         </div>
       </div>
+
+      <form class="navbar navbar-expand-lg">
+        <button
+          className="nav-link btn btn-primary float-right"
+          onClick={LogoutHandle}
+        >
+          logout
+        </button>
+      </form>
     </nav>
   );
 };

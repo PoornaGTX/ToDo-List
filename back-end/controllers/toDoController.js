@@ -4,9 +4,11 @@ const User = require("../models/User");
 
 const { BadRequestError, NotFoundError } = require("../errors/index");
 
+//controller for create todo
 const createToDo = async (req, res) => {
   const { toDoName, date } = req.body;
 
+  //get user id from middleware
   const createdBy = req.user.userId;
 
   if (!toDoName || !date) {
@@ -38,6 +40,7 @@ const getALLToDos = async (req, res) => {
 
   let result = ToDo.find(queryObject);
 
+  //sort
   if (sort === "latest") {
     result = result.sort("-date");
   }
@@ -58,6 +61,8 @@ const getALLToDos = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ toDo });
 };
+
+//controller for update todo
 
 const updateToDo = async (req, res) => {
   const { id: ToDoId } = req.params;
@@ -80,6 +85,8 @@ const updateToDo = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ updatedToDo });
 };
+
+//controller for delete todo
 
 const deleteToDo = async (req, res) => {
   const { id: ToDoId } = req.params;

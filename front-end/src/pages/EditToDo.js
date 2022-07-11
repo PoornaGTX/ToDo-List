@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import NavBar from "../component/NavBar";
-import FormRow from "../component/FormRow";
 import Alert from "../component/Alert";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../context/appContext";
 import Wrapper from "../wrappers/ProfilePageWrapper";
 
 const EditToDo = () => {
+  //get states from globel context
   const {
     isLoading,
     showAlert,
@@ -20,14 +20,17 @@ const EditToDo = () => {
     deleteToDo,
   } = useAppContext();
 
+  //states
   const [updateToDoName, setUpdateToDoName] = useState(toDoName);
   const [updateToDoDate, setUpdateToDoDate] = useState(date);
 
   const navigate = useNavigate();
 
+  //edit ToDo event handler
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    //validate the inputs
     if (!toDoName || !date) {
       displayAlert();
       return;
@@ -39,8 +42,13 @@ const EditToDo = () => {
     };
 
     editToDo(todoUpdateData);
+
+    setTimeout(() => {
+      navigate("/");
+    }, 3000);
   };
 
+  //complete ToDo event handler
   const completeHandle = () => {
     const isComplete = true;
 
@@ -49,17 +57,16 @@ const EditToDo = () => {
 
     setTimeout(() => {
       navigate("/");
-    }, 500);
+    }, 2000);
   };
 
+  //Delete ToDo event handler
   const deleteToDoHandle = () => {
     deleteToDo(editToDOId);
 
-    alert("delete Complete");
-
     setTimeout(() => {
       navigate("/");
-    }, 500);
+    }, 2000);
   };
 
   //restricted from unauthorized users
@@ -71,10 +78,12 @@ const EditToDo = () => {
 
   return (
     <>
+      <NavBar />
       <Wrapper>
         <form className="form" onSubmit={handleSubmit}>
           <h3>Edit ToDo</h3>
-          {showAlert && alert("todo udpate ok")}
+          <h4>{isComplete && "This ToDo is completed"}</h4>
+          {showAlert && <Alert />}
 
           <div className="content">
             <div className="form-center">
@@ -101,6 +110,7 @@ const EditToDo = () => {
                 className="form-input"
                 type="text"
                 name="isComplete"
+                readOnly
                 value={isComplete ? "Completed tesk" : "incomplete task"}
               />
 
@@ -110,7 +120,7 @@ const EditToDo = () => {
                   className="btn btn-block submit-btn"
                   disabled={isLoading}
                 >
-                  submit
+                  Edit ToDo
                 </button>
               </div>
 
@@ -121,7 +131,7 @@ const EditToDo = () => {
                   disabled={isLoading}
                   onClick={deleteToDoHandle}
                 >
-                  delete
+                  Delete ToDo
                 </button>
               </div>
 
@@ -129,10 +139,10 @@ const EditToDo = () => {
                 <button
                   type="buttton"
                   className="btn btn-block submit-btn"
-                  disabled={isLoading}
+                  disabled={isLoading || isComplete}
                   onClick={completeHandle}
                 >
-                  complete
+                  Complete ToDo
                 </button>
               </div>
             </div>
