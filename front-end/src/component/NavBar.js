@@ -3,8 +3,15 @@ import { useAppContext } from "../context/appContext";
 import { useNavigate, Link } from "react-router-dom";
 
 const NavBar = () => {
-  const { user } = useAppContext();
+  const { user, logoutUser } = useAppContext();
   const navigate = useNavigate();
+
+  const LogoutHandle = () => {
+    logoutUser();
+    setTimeout(() => {
+      navigate("/register");
+    }, 1000);
+  };
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -21,9 +28,16 @@ const NavBar = () => {
             <a className="nav-link" href="http://localhost:3000/update-profile">
               Profile
             </a>
-            <a className="nav-link" href="#">
-              Pricing
+            <a className="nav-link" href="http://localhost:3000/update-profile">
+              {user?.name}{" "}
             </a>
+
+            <button
+              className="nav-link btn btn-primary float-right"
+              onClick={LogoutHandle}
+            >
+              logout
+            </button>
           </div>
         </div>
       </div>

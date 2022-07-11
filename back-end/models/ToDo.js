@@ -13,6 +13,10 @@ const ToDoSchema = new mongoose.Schema(
       required: [true, "must provide name"],
       default: "none",
     },
+    isComplete: {
+      type: Boolean,
+      default: false,
+    },
     createdBy: {
       type: String,
       required: [true, "Please provide user"],

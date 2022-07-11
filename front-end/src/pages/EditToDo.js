@@ -7,8 +7,18 @@ import { useAppContext } from "../context/appContext";
 import Wrapper from "../wrappers/ProfilePageWrapper";
 
 const EditToDo = () => {
-  const { isLoading, showAlert, displayAlert, toDoName, date, editToDo, user } =
-    useAppContext();
+  const {
+    isLoading,
+    showAlert,
+    displayAlert,
+    toDoName,
+    date,
+    editToDOId,
+    isComplete,
+    editToDo,
+    user,
+    deleteToDo,
+  } = useAppContext();
 
   const [updateToDoName, setUpdateToDoName] = useState(toDoName);
   const [updateToDoDate, setUpdateToDoDate] = useState(date);
@@ -28,9 +38,28 @@ const EditToDo = () => {
       date: updateToDoDate,
     };
 
-    console.log(todoUpdateData);
-
     editToDo(todoUpdateData);
+  };
+
+  const completeHandle = () => {
+    const isComplete = true;
+
+    const todoUpdateData = { toDoName, date, isComplete };
+    editToDo(todoUpdateData);
+
+    setTimeout(() => {
+      navigate("/");
+    }, 500);
+  };
+
+  const deleteToDoHandle = () => {
+    deleteToDo(editToDOId);
+
+    alert("delete Complete");
+
+    setTimeout(() => {
+      navigate("/");
+    }, 500);
   };
 
   //restricted from unauthorized users
@@ -49,6 +78,9 @@ const EditToDo = () => {
 
           <div className="content">
             <div className="form-center">
+              <label>ToDo Name</label>
+              <label>ToDo Date</label>
+              <label>ToDo Status</label>
               <input
                 className="form-input"
                 type="text"
@@ -64,7 +96,13 @@ const EditToDo = () => {
                 value={updateToDoDate}
                 onChange={(e) => setUpdateToDoDate(e.target.value)}
               />
-              <br />
+
+              <input
+                className="form-input"
+                type="text"
+                name="isComplete"
+                value={isComplete ? "Completed tesk" : "incomplete task"}
+              />
 
               <div className="btn-container">
                 <button
@@ -73,6 +111,28 @@ const EditToDo = () => {
                   disabled={isLoading}
                 >
                   submit
+                </button>
+              </div>
+
+              <div className="btn-container">
+                <button
+                  type="button"
+                  className="btn btn-block submit-btn"
+                  disabled={isLoading}
+                  onClick={deleteToDoHandle}
+                >
+                  delete
+                </button>
+              </div>
+
+              <div className="btn-container">
+                <button
+                  type="buttton"
+                  className="btn btn-block submit-btn"
+                  disabled={isLoading}
+                  onClick={completeHandle}
+                >
+                  complete
                 </button>
               </div>
             </div>

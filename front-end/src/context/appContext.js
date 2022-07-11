@@ -25,6 +25,14 @@ import {
   EDIT_TODO,
   EDIT_TODO_COMPLETE,
   EDIT_TODO_ERROR,
+  HANDLE_CHANGE,
+  DELETE_TODO,
+  LOGIN_PASSWORDREST,
+  LOGIN_PASSWORDREST_COMPLETE,
+  LOGIN_PASSWORDREST_ERROR,
+  LOGIN_NEWPASSWORD,
+  LOGIN_NEWPASSWORD_COMPLETE,
+  LOGIN_NEWPASSWORD_ERROR,
 } from "./actions";
 
 const token = localStorage.getItem("token");
@@ -41,6 +49,12 @@ const initialState = {
   editToDOId: "",
   toDoName: "",
   date: "",
+  isComplete: "",
+  search: "",
+  sort: "latest",
+  searchDate: "",
+  sortOptions: ["latest", "oldest", "a-z", "z-a"],
+  PasswordRestStatus: false,
 };
 
 const AppContext = React.createContext();
@@ -145,6 +159,47 @@ const AppProvider = ({ children }) => {
     clearAlert();
   };
 
+  //password reset email verification
+
+  const loginUserPasswordRest = async (email) => {
+    dispatch({ type: LOGIN_PASSWORDREST });
+    try {
+      const response = await axios.post("/api/V1/users/login/frogetpassword", {
+        email,
+      });
+      dispatch({
+        type: LOGIN_PASSWORDREST_COMPLETE,
+      });
+    } catch (error) {
+      dispatch({
+        type: LOGIN_PASSWORDREST_ERROR,
+      });
+    }
+    clearAlert();
+  };
+
+  //new password
+
+  const loginUserNewPassword = async (password, id, token) => {
+    dispatch({ type: LOGIN_NEWPASSWORD });
+    const newPassword = password;
+    try {
+      const response = await axios.post(
+        `/api/V1/users/login/newpassword/${id}/${token}`,
+        { newPassword }
+      );
+      dispatch({
+        type: LOGIN_NEWPASSWORD_COMPLETE,
+        payload: { msg: response.data.msg },
+      });
+    } catch (error) {
+      dispatch({
+        type: LOGIN_NEWPASSWORD_ERROR,
+      });
+    }
+    clearAlert();
+  };
+
   //logout
   const logoutUser = () => {
     dispatch({ type: LOGOUT_USER });
@@ -198,7 +253,18 @@ const AppProvider = ({ children }) => {
   //get all ToDos
 
   const getToDos = async () => {
-    let url = `/todos`;
+    const { search, sort, searchDate } = state;
+
+    let url = `/todos?sort=${sort}`;
+
+    if (search) {
+      url = url + `&search=${search}`;
+    }
+
+    if (searchDate) {
+      url = url + `&searchDate=${searchDate}`;
+    }
+
     dispatch({ type: GET_TODOS });
 
     try {
@@ -215,6 +281,14 @@ const AppProvider = ({ children }) => {
     clearAlert();
   };
 
+  //handle changes
+  const handleChange = ({ name, value }) => {
+    dispatch({
+      type: HANDLE_CHANGE,
+      payload: { name, value },
+    });
+  };
+
   const setEditToDo = (id) => {
     dispatch({ type: SET_EDIT_TODO, payload: { id } });
   };
@@ -225,15 +299,24 @@ const AppProvider = ({ children }) => {
     try {
       await authFetch.patch(`/todos/${state.editToDOId}`, todoUpdateData);
       dispatch({ type: EDIT_TODO_COMPLETE });
-      //dispatch({ type: CLEAR_VALUES });
     } catch (error) {
-      //if (error.response.status === 401) return;
+      if (error.response.status === 401) return;
       dispatch({
         type: EDIT_TODO_ERROR,
-        //payload: { msg: error.response.data.msg },
+        payload: { msg: error.response.data.msg },
       });
     }
     clearAlert();
+  };
+
+  const deleteToDo = async (id) => {
+    dispatch({ type: DELETE_TODO });
+    try {
+      await authFetch.delete(`/todos/${id}`);
+      getToDos(); //to get latest toDos
+    } catch (error) {
+      //logoutUser()
+    }
   };
 
   return (
@@ -242,12 +325,17 @@ const AppProvider = ({ children }) => {
         ...state,
         registerUser,
         loginUser,
+        loginUserPasswordRest,
+        loginUserNewPassword,
+        logoutUser,
         displayAlert,
         updateUser,
         createToDo,
         getToDos,
         setEditToDo,
         editToDo,
+        deleteToDo,
+        handleChange,
       }}
     >
       {children}
