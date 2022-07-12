@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
 import { useAppContext } from "../context/appContext";
 import { useNavigate } from "react-router-dom";
 import Wrapper from "../wrappers/RegisterPageWrapper";
@@ -10,16 +9,28 @@ const PasswordRest = () => {
   const { id, token } = useParams();
 
   const navigate = useNavigate();
-  const [password, setPassword] = useState("");
 
-  const { user, isLoading, showAlert, displayAlert, loginUserNewPassword } =
+  //states
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  //get states from globel context
+  const { isLoading, showAlert, displayAlert, loginUserNewPassword } =
     useAppContext();
 
+  //event handler for password reset
   const onSubmit = (e) => {
     e.preventDefault();
 
-    if (!password) {
+    //validate the inputs
+    if (!password || !confirmPassword) {
       displayAlert();
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      console.log(password, confirmPassword);
+      alert("password is not match");
       return;
     }
 
@@ -51,6 +62,14 @@ const PasswordRest = () => {
           name="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+        />
+        <label>Re-Enter New Password</label>
+        <input
+          className="form-input"
+          type="password"
+          name="Re-Enter Password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
         />
 
         <button type="submit" className="btn btn-block" disabled={isLoading}>

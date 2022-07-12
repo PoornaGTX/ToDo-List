@@ -10,18 +10,21 @@ const Profile = () => {
   //get states from globel context
   const { user, showAlert, updateUser, isLoading, logoutUser } =
     useAppContext();
+
   const navigate = useNavigate();
 
   //states
   const [name, setName] = useState(user?.name);
   const [email, setEmail] = useState(user?.email);
 
+  //event handler for update user details
   const handleSubmit = (e) => {
     e.preventDefault();
 
     updateUser({ name, email });
   };
 
+  //event handler for change password
   const changePassword = () => {
     navigate("/login/frogetpassword");
     logoutUser();

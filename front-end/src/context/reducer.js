@@ -13,8 +13,6 @@ import {
   LOGOUT_USER,
   CREATE_TODO,
   CREATE_TODO_COMPLETE,
-  CREATE_TODO_ERROR,
-  CLEAR_VALUES,
   GET_TODOS,
   GET_TODOS_COMPLETED,
   SET_EDIT_TODO,
@@ -33,6 +31,7 @@ import {
 
 import { initialState } from "./appContext";
 
+// display alert
 const reducer = (state, action) => {
   if (action.type === DISPLAY_ALERT) {
     return {
@@ -43,6 +42,7 @@ const reducer = (state, action) => {
     };
   }
 
+  //clear alert
   if (action.type === CLEAR_ALERT) {
     return {
       ...state,
@@ -199,6 +199,8 @@ const reducer = (state, action) => {
     };
   }
 
+  // create todo
+
   if (action.type === CREATE_TODO) {
     return { ...state, isLoading: true };
   }
@@ -212,6 +214,8 @@ const reducer = (state, action) => {
       alertText: "New ToDo Created",
     };
   }
+
+  //get todos
 
   if (action.type === GET_TODOS) {
     return {
@@ -228,6 +232,8 @@ const reducer = (state, action) => {
       todos: action.payload.toDo,
     };
   }
+
+  //edit todo
 
   if (action.type === SET_EDIT_TODO) {
     const todo = state.todos.find(
@@ -271,6 +277,8 @@ const reducer = (state, action) => {
     };
   }
 
+  //delete todo
+
   if (action.type === DELETE_TODO) {
     return {
       ...state,
@@ -280,6 +288,8 @@ const reducer = (state, action) => {
       alertText: "ToDo deleted",
     };
   }
+
+  //handle change
 
   if (action.type === HANDLE_CHANGE) {
     return { ...state, [action.payload.name]: action.payload.value };

@@ -5,6 +5,7 @@ import { useAppContext } from "../context/appContext";
 import Wrapper from "../wrappers/SearchContainerWrapper";
 
 const Search = () => {
+  //get states from globel context
   const { isLoading, search, sort, sortOptions, searchDate, handleChange } =
     useAppContext();
 

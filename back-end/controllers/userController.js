@@ -9,10 +9,12 @@ var nodemailer = require("nodemailer");
 const register = async (req, res) => {
   const { name, email, password } = req.body;
 
+  //validate the values
   if (!name || !email || !password) {
     throw new BadRequestError("please provide all values");
   }
 
+  //check user already exsists
   const userAlreadyExsisits = await User.findOne({ email });
 
   if (userAlreadyExsisits) {
@@ -41,11 +43,14 @@ const login = async (req, res) => {
     throw new BadRequestError("Please provide all values");
   }
 
+  //get user data
   const user = await User.findOne({ email }).select("+password");
+
   if (!user) {
     throw new UnAuthenticatedError("invalid Credentials");
   }
 
+  //check the password
   const isPasswordCorrect = await user.comparePassword(password);
 
   if (!isPasswordCorrect) {
@@ -66,6 +71,7 @@ const login = async (req, res) => {
 const updateUser = async (req, res) => {
   const { email, name } = req.body;
 
+  //validate the values
   if (!email || !name) {
     throw new BadRequestError("Please provide all values");
   }
@@ -85,6 +91,8 @@ const updateUser = async (req, res) => {
 const frogetPassword = async (req, res) => {
   const { email } = req.body;
   console.log(email);
+
+  //get the user data
   const user = await User.findOne({ email });
 
   if (!user) {
@@ -93,6 +101,7 @@ const frogetPassword = async (req, res) => {
 
   //create one time link unique
   const secret = process.env.JWT_SECRET + user.password;
+
   const payload = {
     email: user.email,
     id: user.id,
@@ -100,6 +109,7 @@ const frogetPassword = async (req, res) => {
 
   //token
   const token = jwt.sign(payload, secret, { expiresIn: "15m" });
+
   //email link
   console.log(token);
   const link = `http://localhost:3000/reset-password/${user.id}/${token}`;
@@ -136,6 +146,7 @@ const newPassword = async (req, res) => {
   const { id, token } = req.params;
   const { newPassword } = req.body;
 
+  //get user data
   const user = await User.findOne({ _id: id });
 
   //check the user is exsisit
@@ -148,6 +159,7 @@ const newPassword = async (req, res) => {
     const secret = process.env.JWT_SECRET + user.password;
     const payload = jwt.verify(token, secret);
 
+    //check the user email with payload email
     if (user.email !== payload.email) {
       throw new UnAuthenticatedError("invalid token");
     }

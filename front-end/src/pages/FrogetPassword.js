@@ -28,19 +28,22 @@ const FrogetPassword = () => {
       displayAlert();
       return;
     }
+
     loginUserPasswordRest(email);
     console.log(email);
 
-    alert("Password rest link sent your email, please check your email");
+    setTimeout(() => {
+      alert("Password rest link sent your email, please check your email");
+    }, 2000);
   };
 
-  useEffect(() => {
-    if (user) {
-      setTimeout(() => {
-        navigate("/");
-      }, 3000);
-    }
-  }, [user, navigate]);
+  // useEffect(() => {
+  //   if (user) {
+  //     setTimeout(() => {
+  //       navigate("/");
+  //     }, 3000);
+  //   }
+  // }, [user, navigate]);
 
   return (
     <Wrapper className="full-page">

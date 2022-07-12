@@ -8,6 +8,7 @@ import Wrapper from "../wrappers/ProfilePageWrapper";
 import Search from "../component/Search";
 
 const Home = () => {
+  //get states from globel context
   const {
     user,
     showAlert,
@@ -21,8 +22,10 @@ const Home = () => {
     sort,
     searchDate,
   } = useAppContext();
+
   const navigate = useNavigate();
 
+  //states
   const [toDoName, setToDoName] = useState("");
   const [date, setDate] = useState("");
 
@@ -39,12 +42,15 @@ const Home = () => {
   var month = today.getMonth() + 1;
   var datenew = today.getDate();
 
+  console.log(today.getMonth(), month);
+
   if (month >= 10) {
     var newToday = year + "-" + +month + "-" + datenew;
   } else {
     var newToday = year + "-" + "0" + month + "-" + datenew;
   }
 
+  //event handler for add todo
   const handleSubmit = (e) => {
     if (!toDoName || !date) {
       displayAlert();
@@ -54,6 +60,7 @@ const Home = () => {
     createToDo(toDodata);
   };
 
+  //get the todo id for edit
   const editHandle = (_id) => {
     setEditToDo(_id);
     navigate("/edit-todo");

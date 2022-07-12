@@ -4,13 +4,13 @@ const ToDoSchema = new mongoose.Schema(
   {
     toDoName: {
       type: String,
-      required: [true, "must provide name"],
+      required: [true, "must provide ToDo name"],
       trim: true,
-      maxlength: [50, "name can not be more than 50 characters"],
+      maxlength: [20, "ToDo name can not be more than 50 characters"],
     },
     date: {
       type: String,
-      required: [true, "must provide name"],
+      required: [true, "must provide date"],
       default: "none",
     },
     isComplete: {

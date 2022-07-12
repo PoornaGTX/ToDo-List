@@ -18,7 +18,6 @@ import {
   CREATE_TODO,
   CREATE_TODO_COMPLETE,
   CREATE_TODO_ERROR,
-  CLEAR_VALUES,
   GET_TODOS,
   GET_TODOS_COMPLETED,
   SET_EDIT_TODO,
@@ -35,8 +34,12 @@ import {
   LOGIN_NEWPASSWORD_ERROR,
 } from "./actions";
 
+//get user details and token from local storage
+
 const token = localStorage.getItem("token");
 const user = localStorage.getItem("user");
+
+//initial states
 
 const initialState = {
   isLoading: false,
@@ -67,6 +70,7 @@ const AppProvider = ({ children }) => {
   });
 
   //request
+
   authFetch.interceptors.request.use(
     (config) => {
       config.headers.common["Authorization"] = `Bearer ${state.token}`;
@@ -78,6 +82,7 @@ const AppProvider = ({ children }) => {
   );
 
   //response
+
   authFetch.interceptors.response.use(
     (response) => {
       return response;
@@ -91,10 +96,14 @@ const AppProvider = ({ children }) => {
     }
   );
 
+  //display alert
+
   const displayAlert = () => {
     dispatch({ type: DISPLAY_ALERT });
     clearAlert();
   };
+
+  //clear alert
 
   const clearAlert = () => {
     setTimeout(() => {
@@ -103,18 +112,21 @@ const AppProvider = ({ children }) => {
   };
 
   //store user details in local storage
+
   const addUserToLocalStorage = ({ user, token }) => {
     localStorage.setItem("user", JSON.stringify(user));
     localStorage.setItem("token", token);
   };
 
   //remove user details in local storage when logout
+
   const removeFromTheLocalStorage = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
   };
 
   //register
+
   const registerUser = async (currentUser) => {
     dispatch({ type: REGISTER_USER });
     try {
@@ -138,6 +150,7 @@ const AppProvider = ({ children }) => {
   };
 
   //login
+
   const loginUser = async (currentUser) => {
     dispatch({ type: LOGIN_USER });
     try {
@@ -201,12 +214,14 @@ const AppProvider = ({ children }) => {
   };
 
   //logout
+
   const logoutUser = () => {
     dispatch({ type: LOGOUT_USER });
     removeFromTheLocalStorage();
   };
 
   //update user details
+
   const updateUser = async (currentUser) => {
     dispatch({ type: UPDATE_USER });
     try {
@@ -239,7 +254,6 @@ const AppProvider = ({ children }) => {
       await authFetch.post("/todos", toDoData);
 
       dispatch({ type: CREATE_TODO_COMPLETE });
-      dispatch({ type: CLEAR_VALUES });
     } catch (error) {
       if (error.response.status === 401) return;
       dispatch({
@@ -282,12 +296,15 @@ const AppProvider = ({ children }) => {
   };
 
   //handle changes
+
   const handleChange = ({ name, value }) => {
     dispatch({
       type: HANDLE_CHANGE,
       payload: { name, value },
     });
   };
+
+  //edit todo
 
   const setEditToDo = (id) => {
     dispatch({ type: SET_EDIT_TODO, payload: { id } });
@@ -309,12 +326,15 @@ const AppProvider = ({ children }) => {
     clearAlert();
   };
 
+  //delete todo
+
   const deleteToDo = async (id) => {
     dispatch({ type: DELETE_TODO });
     try {
       await authFetch.delete(`/todos/${id}`);
       getToDos(); //to get latest toDos
     } catch (error) {
+      console.log(error);
       //logoutUser()
     }
   };
