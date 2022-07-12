@@ -51,7 +51,7 @@ const FrogetPassword = () => {
         {showAlert && <Alert />}
         <h3>{PasswordRestStatus ? "Rest Password" : "Froget Password"}</h3>
 
-        <label>Enter Email here</label>
+        <label>Enter Email Here</label>
         <input
           className="form-input"
           type="email"

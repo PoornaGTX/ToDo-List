@@ -101,7 +101,7 @@ const Home = () => {
               />
             </label>
             <label>
-              Enter ToDo Name Here
+              Enter ToDo Date Here
               <input
                 className="form-input"
                 type="date"
