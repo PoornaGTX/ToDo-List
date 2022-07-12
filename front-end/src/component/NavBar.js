@@ -1,6 +1,6 @@
-import { React, useState, useEffect } from "react";
+import React from "react";
 import { useAppContext } from "../context/appContext";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
   const { user, logoutUser } = useAppContext();

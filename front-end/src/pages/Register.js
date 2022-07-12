@@ -6,6 +6,7 @@ import Wrapper from "../wrappers/RegisterPageWrapper";
 import FormRow from "../component/FormRow";
 import Alert from "../component/Alert";
 
+//initial states
 const initialState = {
   name: "",
   email: "",
@@ -15,8 +16,11 @@ const initialState = {
 
 const Register = () => {
   const navigate = useNavigate();
+
+  //states
   const [values, setValues] = useState(initialState);
 
+  //get states from globel context
   const { user, isLoading, showAlert, displayAlert, registerUser, loginUser } =
     useAppContext();
 
@@ -28,6 +32,7 @@ const Register = () => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
+  //event handler for login/register
   const onSubmit = (e) => {
     e.preventDefault();
     const { name, email, password, isMember } = values;
@@ -39,6 +44,7 @@ const Register = () => {
     }
 
     const currentUser = { name, email, password };
+
     //already registered user
     if (isMember) {
       loginUser(currentUser);
@@ -50,6 +56,7 @@ const Register = () => {
     console.log(values);
   };
 
+  //event handler for password reset
   const passwordRest = () => {
     navigate("/login/frogetpassword");
   };
