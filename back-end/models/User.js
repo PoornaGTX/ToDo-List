@@ -29,7 +29,7 @@ const UserSchema = new mongoose.Schema({
 });
 
 //password hashing
-//before save the document this function will be executed
+//before save the document this function will be executed (middleware)
 UserSchema.pre("save", async function () {
   if (!this.isModified("password")) return;
   const salt = await bcrypt.genSalt(10);

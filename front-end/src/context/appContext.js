@@ -66,12 +66,14 @@ const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const authFetch = axios.create({
-    baseURL: "/api/v1",
+    baseURL:
+      "https://sbwcnnxsyc.execute-api.us-east-1.amazonaws.com/dev/api/v1",
   });
 
   //request
 
   authFetch.interceptors.request.use(
+    //before requesting to backend add the authorization headers
     (config) => {
       config.headers.common["Authorization"] = `Bearer ${state.token}`;
       return config;
@@ -84,10 +86,12 @@ const AppProvider = ({ children }) => {
   //response
 
   authFetch.interceptors.response.use(
+    //trigger with range 200 response codes
     (response) => {
       return response;
     },
     (error) => {
+      //trigger with range out of 200 response codes
       console.log(error.response);
       if (error.response.status === 401) {
         logoutUser();
@@ -130,7 +134,10 @@ const AppProvider = ({ children }) => {
   const registerUser = async (currentUser) => {
     dispatch({ type: REGISTER_USER });
     try {
-      const response = await axios.post("/api/v1/users/register", currentUser);
+      const response = await axios.post(
+        "https://sbwcnnxsyc.execute-api.us-east-1.amazonaws.com/dev/api/v1/users/register",
+        currentUser
+      );
       //console.log(response);
       const { user, token } = response.data;
       dispatch({
@@ -154,7 +161,10 @@ const AppProvider = ({ children }) => {
   const loginUser = async (currentUser) => {
     dispatch({ type: LOGIN_USER });
     try {
-      const response = await axios.post("/api/V1/users/login", currentUser);
+      const response = await axios.post(
+        "https://sbwcnnxsyc.execute-api.us-east-1.amazonaws.com/dev/api/V1/users/login",
+        currentUser
+      );
 
       const { user, token } = response.data;
       dispatch({
@@ -177,9 +187,12 @@ const AppProvider = ({ children }) => {
   const loginUserPasswordRest = async (email) => {
     dispatch({ type: LOGIN_PASSWORDREST });
     try {
-      const response = await axios.post("/api/V1/users/login/frogetpassword", {
-        email,
-      });
+      const response = await axios.post(
+        "https://sbwcnnxsyc.execute-api.us-east-1.amazonaws.com/dev/api/V1/users/login/frogetpassword",
+        {
+          email,
+        }
+      );
       dispatch({
         type: LOGIN_PASSWORDREST_COMPLETE,
       });
@@ -198,7 +211,7 @@ const AppProvider = ({ children }) => {
     const newPassword = password;
     try {
       const response = await axios.post(
-        `/api/V1/users/login/newpassword/${id}/${token}`,
+        `https://sbwcnnxsyc.execute-api.us-east-1.amazonaws.com/dev/api/V1/users/login/newpassword/${id}/${token}`,
         { newPassword }
       );
       dispatch({

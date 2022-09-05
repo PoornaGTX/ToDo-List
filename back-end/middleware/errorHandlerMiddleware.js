@@ -10,9 +10,9 @@ const errorHandlerMiddleware = (err, req, res, next) => {
 
   if (err.name === "ValidationError") {
     defaultError.StatusCode = StatusCodes.BAD_REQUEST;
-    defaultError.msg = Object.values(err.errors)
+    defaultError.msg = Object.values(err.errors) //access the all properties in the error
       .map((item) => item.message)
-      .join(",");
+      .join(","); //join the each message
   }
 
   //check eamil that already exsists

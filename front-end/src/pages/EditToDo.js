@@ -4,21 +4,30 @@ import Alert from "../component/Alert";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../context/appContext";
 import Wrapper from "../wrappers/ProfilePageWrapper";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteToDo, editToDo, displayAlert } from "../features/toDo/toDoSlice";
 
 const EditToDo = () => {
   //get states from globel context
-  const {
-    isLoading,
-    showAlert,
-    displayAlert,
-    toDoName,
-    date,
-    editToDOId,
-    isComplete,
-    editToDo,
-    user,
-    deleteToDo,
-  } = useAppContext();
+  // const {
+  //   isLoading,
+  //   showAlert,
+  //   displayAlert,
+  //   toDoName,
+  //   date,
+  //   editToDOId,
+  //   isComplete,
+  //   editToDo,
+  //   user,
+  //   deleteToDo,
+  // } = useAppContext();
+
+  const { isLoading, showAlert, toDoName, date, editToDOId, isComplete } =
+    useSelector((store) => store.todo);
+
+  const { user } = useSelector((store) => store.user);
+
+  const dispatch = useDispatch();
 
   //states
   const [updateToDoName, setUpdateToDoName] = useState(toDoName);
@@ -32,7 +41,7 @@ const EditToDo = () => {
 
     //validate the inputs
     if (!toDoName || !date) {
-      displayAlert();
+      dispatch(displayAlert());
       return;
     }
 
@@ -41,7 +50,7 @@ const EditToDo = () => {
       date: updateToDoDate,
     };
 
-    editToDo(todoUpdateData);
+    dispatch(editToDo(todoUpdateData));
 
     setTimeout(() => {
       navigate("/");
@@ -53,7 +62,7 @@ const EditToDo = () => {
     const isComplete = true;
 
     const todoUpdateData = { toDoName, date, isComplete };
-    editToDo(todoUpdateData);
+    dispatch(editToDo(todoUpdateData));
 
     setTimeout(() => {
       navigate("/");
@@ -62,7 +71,7 @@ const EditToDo = () => {
 
   //Delete ToDo event handler
   const deleteToDoHandle = () => {
-    deleteToDo(editToDOId);
+    dispatch(deleteToDo(editToDOId));
 
     setTimeout(() => {
       navigate("/");

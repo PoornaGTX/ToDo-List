@@ -1,17 +1,22 @@
 import React from "react";
 import FormRow from "./FormRow";
 import FormRowSelect from "./FormRowSelect";
-import { useAppContext } from "../context/appContext";
+// import { useAppContext } from "../context/appContext";
 import Wrapper from "../wrappers/SearchContainerWrapper";
+import { useDispatch, useSelector } from "react-redux";
+import { handleChange } from "../features/toDo/toDoSlice";
 
 const Search = () => {
   //get states from globel context
-  const { isLoading, search, sort, sortOptions, searchDate, handleChange } =
-    useAppContext();
+
+  const dispatch = useDispatch();
+  const { isLoading, search, sort, sortOptions, searchDate } = useSelector(
+    (store) => store.todo
+  );
 
   const handleSearch = (e) => {
     if (isLoading) return;
-    handleChange({ name: e.target.name, value: e.target.value });
+    dispatch(handleChange({ name: e.target.name, value: e.target.value }));
   };
 
   return (

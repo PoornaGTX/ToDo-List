@@ -8,6 +8,8 @@ var nodemailer = require("nodemailer");
 
 const register = async (req, res) => {
   const { name, email, password } = req.body;
+  console.log("test");
+  console.log(name, email, password);
 
   //validate the values
   if (!name || !email || !password) {
@@ -112,7 +114,7 @@ const frogetPassword = async (req, res) => {
 
   //email link
   console.log(token);
-  const link = `http://localhost:3000/reset-password/${user.id}/${token}`;
+  const link = `https://sbwcnnxsyc.execute-api.us-east-1.amazonaws.com/dev/reset-password/${user.id}/${token}`;
 
   //email
 

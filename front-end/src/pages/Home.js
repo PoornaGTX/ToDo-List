@@ -6,22 +6,37 @@ import FormRow from "../component/FormRow";
 import Alert from "../component/Alert";
 import Wrapper from "../wrappers/ProfilePageWrapper";
 import Search from "../component/Search";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  displayAlert,
+  getToDos,
+  createToDo,
+  setEditToDo,
+} from "../features/toDo/toDoSlice";
 
 const Home = () => {
   //get states from globel context
-  const {
-    user,
-    showAlert,
-    isLoading,
-    createToDo,
-    getToDos,
-    todos,
-    setEditToDo,
-    displayAlert,
-    search,
-    sort,
-    searchDate,
-  } = useAppContext();
+  // const {
+  //   user,
+  //   showAlert,
+  //   isLoading,
+  //   createToDo,
+  //   getToDos,
+  //   todos,
+  //   setEditToDo,
+  //   displayAlert,
+  //   search,
+  //   sort,
+  //   searchDate,
+  // } = useAppContext();
+
+  const { showAlert, isLoading, todos, search, sort, searchDate } = useSelector(
+    (store) => store.todo
+  );
+
+  const { user } = useSelector((store) => store.user);
+
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
@@ -34,15 +49,11 @@ const Home = () => {
     (singletodo) => singletodo.isComplete === false
   );
 
-  console.log(inCompleteToDos.length);
-
   //date
   var today = new Date();
   var year = today.getFullYear();
   var month = today.getMonth() + 1;
   var datenew = today.getDate();
-
-  console.log(today.getMonth(), month);
 
   if (month >= 10) {
     var newToday = year + "-" + +month + "-" + datenew;
@@ -53,22 +64,22 @@ const Home = () => {
   //event handler for add todo
   const handleSubmit = (e) => {
     if (!toDoName || !date) {
-      displayAlert();
+      dispatch(displayAlert());
       return;
     }
     const toDodata = { toDoName, date };
-    createToDo(toDodata);
+    dispatch(createToDo(toDodata));
   };
 
   //get the todo id for edit
   const editHandle = (_id) => {
-    setEditToDo(_id);
+    dispatch(setEditToDo(_id));
     navigate("/edit-todo");
   };
 
   //restricted from unauthorized users
   useEffect(() => {
-    getToDos();
+    dispatch(getToDos());
     if (!user) {
       navigate("/register");
     }

@@ -4,10 +4,13 @@ import { useAppContext } from "../context/appContext";
 import { useNavigate } from "react-router-dom";
 import Wrapper from "../wrappers/RegisterPageWrapper";
 import Alert from "../component/Alert";
+import { useDispatch, useSelector } from "react-redux";
+import { displayAlert, loginUserNewPassword } from "../features/user/userSlice";
 
 const PasswordRest = () => {
   const { id, token } = useParams();
 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   //states
@@ -15,8 +18,7 @@ const PasswordRest = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   //get states from globel context
-  const { isLoading, showAlert, displayAlert, loginUserNewPassword } =
-    useAppContext();
+  const { isLoading, showAlert } = useSelector((store) => store.user);
 
   //event handler for password reset
   const onSubmit = (e) => {
@@ -24,7 +26,7 @@ const PasswordRest = () => {
 
     //validate the inputs
     if (!password || !confirmPassword) {
-      displayAlert();
+      dispatch(displayAlert());
       return;
     }
 
@@ -34,7 +36,7 @@ const PasswordRest = () => {
       return;
     }
 
-    loginUserNewPassword(password, id, token);
+    dispatch(loginUserNewPassword({ password, id, token }));
 
     setTimeout(() => {
       navigate("/register");

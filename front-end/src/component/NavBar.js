@@ -1,13 +1,18 @@
 import React from "react";
 import { useAppContext } from "../context/appContext";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUser } from "../features/user/userSlice";
 
 const NavBar = () => {
-  const { user, logoutUser } = useAppContext();
+  const dispatch = useDispatch();
+  const { user } = useSelector((store) => store.user);
+
+  // const { user, logoutUser } = useAppContext();
   const navigate = useNavigate();
 
   const LogoutHandle = () => {
-    logoutUser();
+    dispatch(logoutUser());
     setTimeout(() => {
       navigate("/register");
     }, 1000);
@@ -35,7 +40,7 @@ const NavBar = () => {
         </div>
       </div>
 
-      <form class="navbar navbar-expand-lg">
+      <form className="navbar navbar-expand-lg">
         <button
           className="nav-link btn btn-primary float-right"
           onClick={LogoutHandle}

@@ -4,18 +4,29 @@ import { useAppContext } from "../context/appContext";
 import { useNavigate } from "react-router-dom";
 import Wrapper from "../wrappers/RegisterPageWrapper";
 import Alert from "../component/Alert";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  loginUserPasswordRest,
+  displayAlert,
+} from "../features/user/userSlice";
 
 const FrogetPassword = () => {
   const navigate = useNavigate();
   //get states from globel context
-  const {
-    user,
-    isLoading,
-    showAlert,
-    loginUserPasswordRest,
-    displayAlert,
-    PasswordRestStatus,
-  } = useAppContext();
+  // const {
+  //   user,
+  //   isLoading,
+  //   showAlert,
+  //   loginUserPasswordRest,
+  //   displayAlert,
+  //   PasswordRestStatus,
+  // } = useAppContext();
+
+  const { user, isLoading, showAlert, PasswordRestStatus } = useSelector(
+    (store) => store.user
+  );
+
+  const dispatch = useDispatch();
 
   //states
   const [email, setEmail] = useState("");
@@ -25,11 +36,11 @@ const FrogetPassword = () => {
 
     //validate the inputs
     if (!email) {
-      displayAlert();
+      dispatch(displayAlert());
       return;
     }
+    dispatch(loginUserPasswordRest(email));
 
-    loginUserPasswordRest(email);
     console.log(email);
 
     setTimeout(() => {
@@ -37,13 +48,13 @@ const FrogetPassword = () => {
     }, 2000);
   };
 
-  // useEffect(() => {
-  //   if (user) {
-  //     setTimeout(() => {
-  //       navigate("/");
-  //     }, 3000);
-  //   }
-  // }, [user, navigate]);
+  useEffect(() => {
+    if (user) {
+      setTimeout(() => {
+        navigate("/");
+      }, 3000);
+    }
+  }, [user, navigate]);
 
   return (
     <Wrapper className="full-page">

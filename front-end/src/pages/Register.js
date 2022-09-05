@@ -5,6 +5,9 @@ import { useNavigate } from "react-router-dom";
 import Wrapper from "../wrappers/RegisterPageWrapper";
 import FormRow from "../component/FormRow";
 import Alert from "../component/Alert";
+import { displayAlert } from "../features/toDo/toDoSlice";
+import { registerUser, loginUser } from "../features/user/userSlice";
+import { useSelector, useDispatch } from "react-redux";
 
 //initial states
 const initialState = {
@@ -16,19 +19,20 @@ const initialState = {
 
 const Register = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   //states
   const [values, setValues] = useState(initialState);
 
   //get states from globel context
-  const { user, isLoading, showAlert, displayAlert, registerUser, loginUser } =
-    useAppContext();
+  const { user, isLoading, showAlert } = useSelector((store) => store.user);
 
   const toggleMember = () => {
     setValues({ ...values, isMember: !values.isMember });
   };
 
   const handleChange = (e) => {
+    //dynamic object properties
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
@@ -39,7 +43,8 @@ const Register = () => {
 
     //validate the values
     if (!email || !password || (!isMember && !name)) {
-      displayAlert();
+      dispatch(displayAlert());
+
       return;
     }
 
@@ -47,13 +52,11 @@ const Register = () => {
 
     //already registered user
     if (isMember) {
-      loginUser(currentUser);
+      dispatch(loginUser(currentUser));
     } else {
       //unregisterd user
-      registerUser(currentUser);
+      dispatch(registerUser(currentUser));
     }
-
-    console.log(values);
   };
 
   //event handler for password reset
@@ -67,6 +70,7 @@ const Register = () => {
         navigate("/");
       }, 3000);
     }
+    console.log(user);
   }, [user, navigate]);
 
   return (

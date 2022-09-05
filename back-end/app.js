@@ -1,5 +1,12 @@
 const express = require("express");
 const app = express();
+require("express-async-errors");
+const cors = require("cors");
+
+app.use(cors());
+app.use(express.json());
+
+//////////
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -12,6 +19,19 @@ require("express-async-errors");
 // db
 const connectDB = require("./db/connect");
 
+const start = async () => {
+  try {
+    await connectDB(process.env.MONGO_URL);
+    app.listen(port, () => {
+      console.log(`Server is listing on port : ${port}`);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+////
+
 //routes
 const toDoRoutes = require("./routes/toDoRoutes");
 const userRoutes = require("./routes/userRoutes");
@@ -20,8 +40,6 @@ const userRoutes = require("./routes/userRoutes");
 const errorHandlerMiddleware = require("./middleware/errorHandlerMiddleware");
 const notFoundMiddleware = require("./middleware/notFoundMiddleware");
 const userAuthMiddleware = require("./middleware/userAuthMiddleware");
-
-app.use(express.json());
 
 app.get("/", (req, res) => {
   res.json({ msg: "Welcome" });
@@ -35,15 +53,6 @@ app.use("/api/V1/users", userRoutes);
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
-const start = async () => {
-  try {
-    await connectDB(process.env.MONGO_URL);
-    app.listen(port, () => {
-      console.log(`Server is listing on port : ${port}`);
-    });
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 start();
+
+module.exports = app;

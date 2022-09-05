@@ -5,14 +5,15 @@ import Alert from "../component/Alert";
 import { useAppContext } from "../context/appContext";
 import Wrapper from "../wrappers/ProfilePageWrapper";
 import NavBar from "../component/NavBar";
+import { useDispatch, useSelector } from "react-redux";
+import { updateUser, logoutUser } from "../features/user/userSlice";
 
 const Profile = () => {
   //get states from globel context
-  const { user, showAlert, updateUser, isLoading, logoutUser } =
-    useAppContext();
+  const { user, showAlert, isLoading } = useSelector((store) => store.user);
 
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   //states
   const [name, setName] = useState(user?.name);
   const [email, setEmail] = useState(user?.email);
@@ -21,13 +22,13 @@ const Profile = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    updateUser({ name, email });
+    dispatch(updateUser({ name, email }));
   };
 
   //event handler for change password
   const changePassword = () => {
     navigate("/login/frogetpassword");
-    logoutUser();
+    dispatch(logoutUser());
   };
 
   //restricted from unauthorized users
